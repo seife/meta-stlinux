@@ -67,7 +67,7 @@ Index: gdb-7.5/gdb/sh-linux-tdep.c
 +#include "floatformat.h"
  #include "solib-svr4.h"
  #include "symtab.h"
-+#include "gdb_string.h"
++#include <string.h>
 +#include "command.h"
 +#include "gdb_assert.h"
  
@@ -708,7 +708,7 @@ Index: gdb-7.5/gdb/sh-linux-nat.c
 +#include "arch-utils.h"
 +
 +#include "gdb_assert.h"
-+#include "gdb_string.h"
++#include <string.h>
 +#include <sys/ptrace.h>
 +#include <sys/user.h>
 +#include <sys/procfs.h>
@@ -908,8 +908,8 @@ Index: gdb-7.5/gdb/sh-linux-nat.c
 +  int tid;
 +
 +  /* GNU/Linux LWP ID's are process ID's.  */
-+  if ((tid = TIDGET (inferior_ptid)) == 0)
-+    tid = PIDGET (inferior_ptid);	/* Not a threaded program.  */
++  if ((tid = ptid_get_lwp (inferior_ptid)) == 0)
++    tid = ptid_get_pid (inferior_ptid);	/* Not a threaded program.  */
 +
 +  for (i = 0; i < SH_LINUX_NUM_REGS; i++)
 +    if (regno == -1 || regno == i)
@@ -926,8 +926,8 @@ Index: gdb-7.5/gdb/sh-linux-nat.c
 +  int tid;
 +
 +  /* GNU/Linux LWP ID's are process ID's.  */
-+  if ((tid = TIDGET (inferior_ptid)) == 0)
-+    tid = PIDGET (inferior_ptid);	/* Not a threaded program.  */
++  if ((tid = ptid_get_lwp (inferior_ptid)) == 0)
++    tid = ptid_get_pid (inferior_ptid);	/* Not a threaded program.  */
 +
 +  for (i = 0; i < SH_LINUX_NUM_REGS; i++)
 +    if (regno == -1 || regno == i)
@@ -1372,7 +1372,7 @@ Index: gdb-7.5/gdb/config/sh/linux.mh
 +# Host: Renesas Super-H running GNU/Linux
 +NAT_FILE= config/sh/nm-linux.h
 +NATDEPFILES= inf-ptrace.o fork-child.o sh-linux-nat.o \
-+	proc-service.o linux-thread-db.o \
++	proc-service.o linux-thread-db.o linux-waitpid.o \
 +	linux-nat.o linux-osdata.o linux-fork.o linux-procfs.o linux-ptrace.o
 +
 +CORELOW_O := corelow.o
