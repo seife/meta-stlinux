@@ -1,6 +1,6 @@
-FILESEXTRAPATHS := "${THISDIR}/files"
+FILESEXTRAPATHS_append := ":${THISDIR}/files"
 
-PRINC := "${@int(PRINC) + 5}"
+##PRINC := "${@int(PRINC) + 5}"
 
 SRC_URI_append = " \
                   file://devinit \
