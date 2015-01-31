@@ -20,6 +20,7 @@ SRC_URI = "git://github.com/project-magpie/linux-sh4-2.6.32.y.git;protocol=https
            file://defconfig_spark7162 \
            file://st-coprocessor.h \
            file://linux-sh4-spark7162_setup_stm24_0211-magpie.patch \
+           file://console.map.c-workaround-for-gcc-4.8.2-build.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -71,11 +72,15 @@ do_compile_kernelmodules() {
 }
 
 do_install() {
+	kerneldir=${D}${KERNEL_SRC_PATH}
 	for i in 7162 7111; do
 		bbnote "changing into ${WORKDIR}/git-$i"
 		cd ${WORKDIR}/git-$i
+		# kernel_do_install does mkdir -p .../Documentation and fails...
+		rm -fr ${kerneldir}/Documentation
 		kernel_do_install
 		mkdir ${D}/lib/modules/$i
+		rm -f ${D}/lib/modules/${KERNEL_VERSION}/build
 		mv ${D}/lib/modules/${KERNEL_VERSION} ${D}/lib/modules/$i
 		cp -a ${D}/usr/src/kernel/.config ${D}/usr/src/kernel/.config-$i
 		# do not copy to -7111...
@@ -86,8 +91,8 @@ do_install() {
 			cp -a ${D}/boot/$j-${KERNEL_VERSION} ${D}/boot/$j-${KERNEL_VERSION}-$i
 		done
 	done
+	ln -s 7111/${KERNEL_VERSION} ${D}/lib/modules/
 	# $PWD is git-7111
-	kerneldir=${D}${KERNEL_SRC_PATH}
 	if [ -f include/linux/bounds.h ]; then
 		mkdir -p $kerneldir/include/linux
 		cp include/linux/bounds.h $kerneldir/include/linux/bounds.h
@@ -133,7 +138,20 @@ do_uboot_mkimage() {
 
 FILES_kernel-dev += "${includedir}/linux"
 
-FILES_kernel-base += " \
+### we need /lib/modules/${KERNEL_VERSION} to be a symlink,
+### but split_kernel_module_packages calls depmod and creates the directory.
+
+PACKAGESPLITFUNCS_append = " undo_depmod "
+undo_depmod() {
+	if [ -d ${D}/lib/modules/${KERNEL_VERSION} ]; then
+		rm -r ${D}/lib/modules/${KERNEL_VERSION}
+		ln -s 7111/${KERNEL_VERSION} ${D}/lib/modules/
+	fi
+}
+
+# do not add, but set absolute, because kernel.bbclass sets (wrong) defaults...
+FILES_kernel-base = " \
+	/lib/modules/${KERNEL_VERSION} \
 	/lib/modules/7111/${KERNEL_VERSION}/modules.order \
 	/lib/modules/7162/${KERNEL_VERSION}/modules.order \
 	/lib/modules/7111/${KERNEL_VERSION}/modules.builtin \
@@ -143,7 +161,6 @@ FILES_kernel-base += " \
 # bitbake.conf only prepends PARALLEL make in tasks called do_compile, which isn't the case for compile_modules
 # So explicitly enable it for that in here
 EXTRA_OEMAKE = "${PARALLEL_MAKE} "
-
 
 PACKAGES =+ "kernel-headers"
 FILES_kernel-headers = "${exec_prefix}/src/linux*"
