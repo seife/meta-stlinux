@@ -1,0 +1,29 @@
+diff --git a/libc/nss/getXXbyYY.c b/libc/nss/getXXbyYY.c
+index c9c6415..5374cea 100644
+--- a/libc/nss/getXXbyYY.c
++++ b/libc/nss/getXXbyYY.c
+@@ -92,6 +92,7 @@ FUNCTION_NAME (ADD_PARAMS)
+ #ifdef NEED_H_ERRNO
+   int h_errno_tmp = 0;
+ #endif
++  int retry = 1;
+ 
+   /* Get lock.  */
+   __libc_lock_lock (lock);
+@@ -112,6 +113,7 @@ FUNCTION_NAME (ADD_PARAMS)
+     }
+ #endif
+ 
++retry:
+   while (buffer != NULL
+ 	 && (INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, &resbuf, buffer,
+ 					buffer_size, &result H_ERRNO_VAR)
+@@ -133,6 +135,8 @@ FUNCTION_NAME (ADD_PARAMS)
+ 	}
+       buffer = new_buf;
+     }
++  if (retry-- && result == NULL)
++    goto retry;
+ 
+   if (buffer == NULL)
+     result = NULL;
