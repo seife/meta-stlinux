@@ -27,5 +27,5 @@ SRC_URI_append = "\
              file://linux-sh4-lmb_stm24_${STM_PATCH_STR}.patch;patch=1 \
              file://linux-sh4-spark_setup_stm24_${STM_PATCH_STR}.patch;patch=1 \
              file://linux-sh4-cifs-unaligned-mem-access-kernel_stm24.patch;patch=1 \
-             file://linux-sh4-linux_yaffs2_stm24_${STM_PATCH_STR}.patch;patch=1 \
+             file://linux-sh4-linux_yaffs2_stm24_0210.patch;patch=1 \
 "
