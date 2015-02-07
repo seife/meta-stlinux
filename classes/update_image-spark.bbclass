@@ -54,5 +54,5 @@ IMAGE_CMD_spark-updt  () {
 	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}//image-version-info ::
 
 	# Burn Partitions
-	dd if=${WORKDIR}/boot.img of=${UPDATEIMG} conv=notrunc seek=1 bs=1M && sync && sync
+	dd if=${WORKDIR}/boot.img of=${UPDATEIMG} conv=notrunc seek=1 bs=1M
 }
