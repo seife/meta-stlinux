@@ -8,20 +8,9 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/linux-stm:"
 
 KEEPUIMAGE = "true"
 KTAG = "stlinux24_${STM_PATCH_STR}"
-INC_PR = "r3"
-
-# Quirk for udev greater or equal 141
-UDEV_GE_141 ?= "0"
+INC_PR = "r4"
 
 KBRANCH = "project-magpie"
-
-SRC_URI = "git://github.com/project-magpie/linux-sh4-2.6.32.y.git;protocol=https;branch=${KBRANCH} \
-           file://defconfig_spark7111 \
-           file://defconfig_spark7162 \
-           file://st-coprocessor.h \
-           file://linux-sh4-spark7162_setup_stm24_0211-magpie.patch \
-           file://console.map.c-workaround-for-gcc-4.8.2-build.patch \
-"
 
 S = "${WORKDIR}/git"
 # or get_kernelversion will fail...
