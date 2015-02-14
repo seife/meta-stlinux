@@ -170,6 +170,9 @@ do_install() {
 	install -m 644 frontcontroller/aotom/aotom_main.h ${D}/${includedir}
 	install -m 644 player2/linux/include/linux/dvb/stm_ioctls.h ${D}/${includedir}/linux/dvb
 	install -m 644 stgfb/stmfb/linux/drivers/video/stmfb.h ${D}/${includedir}/linux
+	# for libmmeimage
+	install -m 644 multicom/include/mme.h ${D}/${includedir}
+	install -m 644 include/player2/JPEG_VideoTransformerTypes.h ${D}/${includedir}
 
 	#install modutils config
 	# install -d ${D}/${sysconfdir}/modules-load.d
