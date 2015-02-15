@@ -141,7 +141,12 @@ do_install() {
 	# install header files
 	install -d ${D}/${includedir}/linux/dvb
 	install -m 644 bpamem/bpamem.h ${D}/${includedir}
-	install -m 644 frontcontroller/aotom/aotom_main.h ${D}/${includedir}
+	for i in aotom_spark aotom; do
+		if test -d frontcontroller/$i; then
+			install -m 644 frontcontroller/$i/aotom_main.h ${D}/${includedir}
+			break
+		fi
+	done
 	install -m 644 player2/linux/include/linux/dvb/stm_ioctls.h ${D}/${includedir}/linux/dvb
 	install -m 644 stgfb/stmfb/linux/drivers/video/stmfb.h ${D}/${includedir}/linux
 	# for libmmeimage
