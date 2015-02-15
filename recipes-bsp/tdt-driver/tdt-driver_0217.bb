@@ -10,11 +10,7 @@ SRC_URI = " \
     file://fix_videomode_names.patch;patch=1 \
     file://silence_tuner_printk.patch;patch=1 \
     file://silence_stmfb_printk.patch;patch=1 \
-        file://0004-aotom-improve-scrolling-text-code.patch \
-        file://0005-aotom-speed-up-softi2c-lowering-CPU-load-of-aotom-dr.patch \
-        file://0006-aotom-add-additional-chars-for-VFD-fix-missing-chars.patch \
-    file://ddt-aotom-register-reboot_notifier-implement-rtc-driver.patch \
-        file://tdt-driver-avoid-buildtime.patch \
+    file://tdt-driver-avoid-buildtime.patch \
     file://aotom_udev.rules \
     file://tdt-driver.init \
     file://select_sparkbox.sh \
