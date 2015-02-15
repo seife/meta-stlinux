@@ -10,6 +10,7 @@ SRC_URI = " \
     file://fix_videomode_names.patch;patch=1 \
     file://silence_tuner_printk.patch;patch=1 \
     file://silence_stmfb_printk.patch;patch=1 \
+    file://silence_stmfb0104_printk.patch;patch=1 \
     file://tdt-driver-avoid-buildtime.patch \
     file://aotom_udev.rules \
     file://tdt-driver.init \
