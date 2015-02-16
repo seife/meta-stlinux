@@ -72,8 +72,8 @@ SRC_URI = "\
     file://gcc-4.8.4-stm-150128.patch \
 "
 
-SRC_URI[md5sum] = "a3d7d63b9cb6b6ea049469a0c4a43c9d"
-SRC_URI[sha256sum] = "09dc2276c73424bbbfda1dbddc62bbbf900c9f185acf7f3e1d773ce2d7e3cdc8"
+SRC_URI[md5sum] = "5a84a30839b2aca22a2d723de2a626ec"
+SRC_URI[sha256sum] = "4a80aa23798b8e9b5793494b8c976b39b8d9aa2e53cd5ed5534aff662a7f8695"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
