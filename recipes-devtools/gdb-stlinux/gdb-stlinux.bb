@@ -57,3 +57,6 @@ RRECOMMENDS_gdb_append_linux-gnueabi = " glibc-thread-db "
 RRECOMMENDS_gdbserver_append_linux = " glibc-thread-db "
 RRECOMMENDS_gdbserver_append_linux-gnueabi = " glibc-thread-db "
 
+FILES_${PN} += " \
+	${datadir}/gdb \
+"
