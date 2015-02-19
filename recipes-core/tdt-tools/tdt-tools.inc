@@ -21,7 +21,26 @@ inherit autotools-brokensep
 EXTRA_OECONF = "--prefix="
 
 do_configure() {
-	./autogen.sh
+	# from ./autogen.sh, which is not cross-friendly
+	if [ ! -e acinclude.m4 ]; then
+		for i in .. ../.. ../../..; do
+			if [ -e `pwd`/$i/acinclude.m4 ]; then
+				ln -s `pwd`/$i/acinclude.m4 .
+			fi
+		done
+	fi
+	echo "Generating configuration files for $package, please wait...."
+	echo "  aclocal $ACLOCAL_FLAGS"
+	aclocal $ACLOCAL_FLAGS
+	echo "  libtoolize --automake"
+	libtoolize --automake
+	echo "  autoconf"
+	autoconf
+	#echo "  autoheader"
+	#autoheader
+	echo "  automake --add-missing"
+	automake --add-missing
+
 	oe_runconf
 }
 
