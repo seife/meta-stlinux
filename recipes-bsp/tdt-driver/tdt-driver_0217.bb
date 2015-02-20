@@ -12,6 +12,7 @@ SRC_URI = " \
     file://silence_stmfb_printk.patch;patch=1 \
     file://silence_stmfb0104_printk.patch;patch=1 \
     file://tdt-driver-avoid-buildtime.patch \
+    file://ddt-driver-bpamem-auto-deallocate.patch \
     file://aotom_udev.rules \
     file://tdt-driver.init \
     file://select_sparkbox.sh \
@@ -26,4 +27,4 @@ require tdt-driver.inc
 SUMMARY = "Driver modules from TDT"
 DESCRIPTION = "Driver modules from TDT"
 
-PR = "r2"
+PR = "r3"
