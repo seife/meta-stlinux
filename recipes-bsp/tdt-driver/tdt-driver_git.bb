@@ -3,7 +3,7 @@ HOMEPAGE = "http://gitorious.org/open-duckbox-project-sh4"
 SRCREV = "a187619deaf19d8419c3a868b78581fbbc3e7898"
 # using our own tdt drivers because this has less overhead
 SRC_URI = " \
-        git://github.com/project-magpie/tdt-driver.git \
+        git://github.com/project-magpie/tdt-driver.git;protocol=http \
         file://0001-player2_191-silence-kmsg-spam.patch;apply=yes \
         file://0002-e2proc-silence-kmsg-spam.patch \
         file://0003-pti-silence-kmsg-spam.patch \

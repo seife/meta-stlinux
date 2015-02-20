@@ -5,7 +5,7 @@ KV = "2.6.32.61-stm24-0217"
 SRCREV = "74561bfd0d8e8d3c8cab207a2b50dd164027fabf"
 
 SRC_URI = " \
-    git://github.com/Duckbox-Developers/driver.git;protocol=git \
+    git://github.com/Duckbox-Developers/driver.git;protocol=http \
     file://aotom_spark_procfs.patch;patch=1 \
     file://fix_videomode_names.patch;patch=1 \
     file://silence_tuner_printk.patch;patch=1 \

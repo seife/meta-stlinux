@@ -10,7 +10,7 @@ PR = "r0"
 SRCREV = "6d79026a12591038663721c14adb76f8f5c3cc42"
 
 SRC_URI = " \
-	git://github.com/Duckbox-Developers/apps.git;protocol=git \
+	git://github.com/Duckbox-Developers/apps.git;protocol=http \
 "
 PV = "1.0+git${SRCPV}"
 
