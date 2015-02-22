@@ -39,10 +39,6 @@ SRC_URI_append_spark += "${SPARK_GEN_SRC_URI} \
                          file://lircd_spark.conf.09_00_07 \
 "
 
-SRC_URI_append_spark7162 += "${SPARK_GEN_SRC_URI} \
-                         file://lircd_spark.conf.09_00_0A \
-                         file://lircd_spark.conf.09_00_07 \
-"
 INITSCRIPT_PACKAGES = "lirc lirc-exec"
 INITSCRIPT_NAME = "lircd"
 INITSCRIPT_PARAMS = "defaults 20"
@@ -56,7 +52,6 @@ EXTRA_OEMAKE = 'SUBDIRS="daemons tools"'
 do_install_append() {
 	install -d ${D}${sysconfdir}/init.d
 	install -d ${D}${sysconfdir}/udev/rules.d/
-        install -m 0644 ${WORKDIR}/98-lirc_spark.rules ${D}${sysconfdir}/udev/rules.d/98-lirc.rules
 	install ${WORKDIR}/lircd.init ${D}${sysconfdir}/init.d/lircd
 	install ${WORKDIR}/lircexec.init ${D}${sysconfdir}/init.d/lircexec
         install -d ${D}${datadir}/lirc/
@@ -67,13 +62,6 @@ do_install_append() {
 
 
 do_install_append_spark() {
-	install -m 0644 ${WORKDIR}/lircd_spark.conf ${D}${sysconfdir}/lircd.conf
-        install -m 0644 ${WORKDIR}/lircd_spark.conf.09_00_0A ${D}${sysconfdir}/lircd.conf.09_00_0A
-        install -m 0644 ${WORKDIR}/lircd_spark.conf.09_00_07 ${D}${sysconfdir}/lircd.conf.09_00_07
-        install -m 0755 ${WORKDIR}/lircd_spark.init ${D}${sysconfdir}/init.d/lircd
-}
-
-do_install_append_spark7162() {
         install -m 0644 ${WORKDIR}/98-lirc_spark.rules ${D}${sysconfdir}/udev/rules.d/98-lirc.rules
 	install -m 0644 ${WORKDIR}/lircd_spark.conf ${D}${sysconfdir}/lircd.conf
         install -m 0644 ${WORKDIR}/lircd_spark.conf.09_00_0A ${D}${sysconfdir}/lircd.conf.09_00_0A
