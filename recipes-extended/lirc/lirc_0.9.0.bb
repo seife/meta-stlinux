@@ -65,7 +65,7 @@ do_install_append_spark() {
         install -m 0644 ${WORKDIR}/98-lirc_spark.rules ${D}${sysconfdir}/udev/rules.d/98-lirc.rules
 	install -m 0644 ${WORKDIR}/lircd_spark.conf ${D}${sysconfdir}/lircd.conf
         install -m 0644 ${WORKDIR}/lircd_spark.conf.09_00_0A ${D}${sysconfdir}/lircd.conf.09_00_0A
-        install -m 0644 ${WORKDIR}/lircd_spark.conf.09_00_07 ${D}${sysconfdir}/lircd.conf.09_00_07
+        # install -m 0644 ${WORKDIR}/lircd_spark.conf.09_00_07 ${D}${sysconfdir}/lircd.conf.09_00_07
         install -m 0755 ${WORKDIR}/lircd_spark.init ${D}${sysconfdir}/init.d/lircd
 }
 
