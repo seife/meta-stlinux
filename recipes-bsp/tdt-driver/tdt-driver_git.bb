@@ -19,6 +19,7 @@ SRC_URI = " \
         file://0007-aotom-register-reboot_notifier-implement-rtc-driver.patch \
         file://tdt-driver-avoid-buildtime.patch \
         file://tdt-driver-bpamem-auto-deallocate.patch \
+        file://tdt-driver-stv090x-speedup-read_snr.patch \
         file://aotom_udev.rules \
         file://tdt-driver.init \
         file://select_sparkbox.sh \
