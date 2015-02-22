@@ -42,8 +42,13 @@ JFFS2_ERASEBLOCK = "0x20000"
 JFFS2_ENDIANNESS = "${@base_conditional('SITEINFO_ENDIANNESS', 'le', '--little-endian', '--big-endian', d)}"
 EXTRA_IMAGECMD_jffs2 = "--pad ${JFFS2_ENDIANNESS} --eraseblock=${JFFS2_ERASEBLOCK} --no-cleanmarkers"
 
+JFFS2_SUM_EXTRA_ARGS = " \
+	${@base_conditional('SITEINFO_ENDIANNESS', 'le', '-l', '-b', d)} \
+	--pad --eraseblock=${JFFS2_ERASEBLOCK} --no-cleanmarkers \
+"
+
 INHERIT += "usb_image-spark71xx"
-IMAGE_FSTYPES ?= "tar.gz ubi ${SDIMG_ROOTFS_TYPE} jffs2 spark71xx-usbimg"
+IMAGE_FSTYPES ?= "tar.gz ubi ${SDIMG_ROOTFS_TYPE} jffs2.sum spark71xx-usbimg"
 
 IMAGE_CLASSES += "usb_image-spark71xx"
 INITRAMFS_FSTYPES = "ext2.gz spark-updt"
