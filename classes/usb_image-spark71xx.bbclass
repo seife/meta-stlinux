@@ -30,7 +30,9 @@ IMAGE_BOOTLOADER ?= "u-boot-mkimage"
 BOOTDD_VOLUME_ID ?= "${MACHINE}"
 
 # Boot partition size [in KiB]
-BOOT_SPACE ?= "20480"
+# default to 60MB, so that we can use the same stick for flashing via U-boot
+# root-partition is aligned at 64mb
+BOOT_SPACE ?= "61440"
 
 # Set alignment to 4MB [in KiB]
 IMAGE_ROOTFS_ALIGNMENT = "4096"
