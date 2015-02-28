@@ -8,7 +8,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/linux-stm:"
 
 KEEPUIMAGE = "true"
 KTAG = "stlinux24_${STM_PATCH_STR}"
-INC_PR = "r4"
+INC_PR = "r5"
 
 KBRANCH = "project-magpie"
 
@@ -172,4 +172,58 @@ python () {
         d.setVar('DEPENDS', depends + ' lzop-native')
 }
 
+pkg_preinst_kernel-image() {
+#!/bin/sh
+[ -n "$D" ] && exit 0
+# is /boot already mounted? then someone configured this manually.
+grep -q " /boot " /proc/mounts && exit 0
+ROOTDEV=$(stat -c %04D /)
+if [ "$ROOTDEV" = 1f06 ]; then # /dev/mtd6
+	mount -t tmpfs tmpfs /boot -osize=16M
+fi
+if [ "$ROOTDEV" = 0802 ]; then # /dev/sda2 => USB boot
+	mount /dev/sda1 /boot
+fi
+exit 0 # no errors
+# no further update-alternatives stuff etc needed...
+}
 
+pkg_postinst_kernel-image() {
+#!/bin/sh
+[ -n "$D" ] && exit 0
+ROOTDEV=$(stat -c %04D /)
+read a b c < /proc/cpuinfo
+if [ "$c" = hdk7105 ]; then
+	SUFFIX="-7162"
+elif [ "$c" = sat7111 ]; then
+	SUFFIX=""
+else
+	echo "unknown system board?"
+	exit 0
+fi
+P=${PKGV}
+P=${P//-/_}
+if [ "$ROOTDEV" = 1f06 ]; then # /dev/mtd6
+	UIMAGE=/boot/uImage-$P$SUFFIX
+	RET=true
+	if [ ! -e $UIMAGE ]; then
+		echo "$UIMAGE is missing!"
+	else
+		flash_erase /dev/mtd5 0 0
+		nandwrite -p /dev/mtd5 $UIMAGE || RET=false
+	fi
+	if grep -q '^tmpfs /boot ' /proc/mounts; then
+		umount /boot
+	fi
+	$RET
+elif [ "$ROOTDEV" = 0802 ]; then
+	if grep -q '^/dev/sda1 /boot ' /proc/mounts; then
+		UIMAGE=/boot/uImage-$P
+		rm -f /boot/uImage # symlink might be present from imaging
+		mv $UIMAGE		/boot/uImage
+		mv $UIMAGE$SUFFIX	/boot/uImage$SUFFIX
+		umount /boot
+	fi
+fi
+exit
+}
