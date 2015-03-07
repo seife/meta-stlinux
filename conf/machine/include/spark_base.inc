@@ -3,9 +3,13 @@ TARGET_ARCH = "sh4"
 STLINUX_SH_UPD_SRPMS = "http://ftp.stlinux.com/pub/stlinux/2.4/updates/SRPMS"
 STLINUX_SH_UPD_RPMS = "http://ftp.stlinux.com/pub/stlinux/2.4/updates/RPMS/sh4/"
 
-STM_PATCH_STR ??= "0211"
+STM_PATCH_STR ??= "0217"
 # needed to select proper .bb file
-STM_LINUX_VERSION ??= "2.6.32.59"
+STM_LINUX_VERSION ??= "2.6.32.61"
+
+# if you want to use the old crap, put this into you conf/local.conf
+# STM_PATCH_STR = "0211"
+# STM_LINUX_VERSION = "2.6.32.59"
 
 PREFERRED_VERSION_stlinux24-${MACHINE} = "${STM_LINUX_VERSION}-stm24-${STM_PATCH_STR}"
 PREFERRED_VERSION_tdt-driver = "${STM_LINUX_VERSION}-stm24-${STM_PATCH_STR}%"
