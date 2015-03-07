@@ -178,6 +178,8 @@ pkg_preinst_kernel-image() {
 # is /boot already mounted? then someone configured this manually.
 grep -q " /boot " /proc/mounts && exit 0
 ROOTDEV=$(stat -c %04D /)
+# it might have been removed when the package is removed
+mkdir /boot 2>/dev/null
 if [ "$ROOTDEV" = 1f06 ]; then # /dev/mtd6
 	mount -t tmpfs tmpfs /boot -osize=16M
 fi
