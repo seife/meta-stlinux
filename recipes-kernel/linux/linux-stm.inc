@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/linux-stm:"
 
-KEEPUIMAGE = "true"
+KEEPUIMAGE = "yes"
 KTAG = "stlinux24_${STM_PATCH_STR}"
 INC_PR = "r5"
 
@@ -19,15 +19,17 @@ PARALLEL_MAKEINST = ""
 
 # KERNEL_VERSION = "${@get_kernelversion('${WORKDIR}/git-7111')}"
 
-do_configure() {
+kernel_do_configure() {
 	cd ${S}
 	if test -e scripts/Makefile.fwinst ; then
 		sed -i -e "s:-m0644:-m 0644:g" scripts/Makefile.fwinst
 	fi
 	# ugly... this has no business in do_configure...
 	rm -fr ${WORKDIR}/git-*
-	cp -al ${WORKDIR}/git ${WORKDIR}/git-7111
-	cp -al ${WORKDIR}/git ${WORKDIR}/git-7162
+	mkdir ${WORKDIR}/git-7111
+	mkdir ${WORKDIR}/git-7162
+	cp -al ${WORKDIR}/git/. ${WORKDIR}/git-7111/.
+	cp -al ${WORKDIR}/git/. ${WORKDIR}/git-7162/.
 	for i in 7111 7162; do
 		bbnote "changing into ${WORKDIR}/git-$i"
 		cd ${WORKDIR}/git-$i
@@ -62,16 +64,21 @@ do_compile_kernelmodules() {
 
 do_install() {
 	kerneldir=${D}${KERNEL_SRC_PATH}
+	bbnote "running do_shared_workdir"
+	do_shared_workdir
 	for i in 7162 7111; do
 		bbnote "changing into ${WORKDIR}/git-$i"
 		cd ${WORKDIR}/git-$i
 		# kernel_do_install does mkdir -p .../Documentation and fails...
 		rm -fr ${kerneldir}/Documentation
+		bbnote "running kernel_do_install"
 		kernel_do_install
 		mkdir ${D}/lib/modules/$i
 		rm -f ${D}/lib/modules/${KERNEL_VERSION}/build
 		mv ${D}/lib/modules/${KERNEL_VERSION} ${D}/lib/modules/$i
-		cp -a ${D}/usr/src/kernel/.config ${D}/usr/src/kernel/.config-$i
+		bbnote "in ${WORKDIR}/git-$i, installing .config to ${STAGING_KERNEL_BUILDDIR}/.config-$i"
+		cp -av .config ${STAGING_KERNEL_BUILDDIR}/.config-$i
+		cp -av .config ${STAGING_KERNEL_BUILDDIR}/.config
 		# do not copy to -7111...
 		[ $i = 7111 ] && break
 		cp -a ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}-$i
@@ -81,14 +88,16 @@ do_install() {
 		done
 	done
 	ln -s 7111/${KERNEL_VERSION} ${D}/lib/modules/
+	kdir=${STAGING_KERNEL_DIR}
 	# $PWD is git-7111
 	if [ -f include/linux/bounds.h ]; then
-		mkdir -p $kerneldir/include/linux
-		cp include/linux/bounds.h $kerneldir/include/linux/bounds.h
+		mkdir -p $kdir/include/linux
+		cp include/linux/bounds.h $kdir/include/linux/bounds.h
 	fi
 	if [ -f include/asm-sh/machtypes.h ]; then
-		mkdir -p $kerneldir/include/asm-sh
-		cp include/asm-sh/machtypes.h $kerneldir/include/asm-sh
+		mkdir -p $kdir/include/asm-sh
+		cp include/asm-sh/machtypes.h $kdir/include/asm-sh
+		ln -sf asm-sh $kdir/include/asm
 	fi
 	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
 
@@ -149,7 +158,7 @@ FILES_kernel-base = " \
 
 # bitbake.conf only prepends PARALLEL make in tasks called do_compile, which isn't the case for compile_modules
 # So explicitly enable it for that in here
-EXTRA_OEMAKE = "${PARALLEL_MAKE} "
+EXTRA_OEMAKE = "${PARALLEL_MAKE} V=1 "
 
 PACKAGES =+ "kernel-headers"
 FILES_kernel-headers = "${exec_prefix}/src/linux*"

@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=751419260aa954499f7abaabaa882b
 
 inherit module
 
-DEPENDS_append = " update-rc.d-native"
+DEPENDS_append = " update-rc.d-native stlinux24-spark"
 
 PACKAGES = "${PN} ${PN}-dev"
 # PACKAGES_DYNAMIC += "kernel-module-*"
@@ -46,6 +46,8 @@ do_configure() {
     ln -s player2_191 ${S}/player2
     ln -s multicom-3.2.4 ${S}/multicom
     ln -s stmfb-3.1_stm24_${STMFB} ${S}/stgfb/stmfb
+    rm -f include/asm
+    ln -s ${STAGING_KERNEL_BUILDDIR}/include/asm-sh include/asm
     rm -f .config
     printf "export CONFIG_PLAYER_191=y\nexport CONFIG_MULTICOM324=y\n" > .config
     # disable wireless build
@@ -56,9 +58,15 @@ do_configure() {
     rm -fr ${WORKDIR}/git-7111
     cp -al ${WORKDIR}/git ${WORKDIR}/git-7162
     cp -al ${WORKDIR}/git ${WORKDIR}/git-7111
+
+    rm -fr ${WORKDIR}/kernel-source
+    mkdir ${WORKDIR}/kernel-source
+    cp -al ${STAGING_KERNEL_DIR}/. ${WORKDIR}/kernel-source
+    cp -al ${STAGING_KERNEL_BUILDDIR}/. ${WORKDIR}/kernel-source
+    rm ${WORKDIR}/kernel-source/source
 }
 
-
+# EXTRA_OEMAKE = "-e "
 
 do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
@@ -68,36 +76,39 @@ do_compile() {
 		if [ $i = 7162 ]; then
 			MACH=SPARK7162
 		fi
-		rm -f ${STAGING_KERNEL_DIR}/.config
-		cp ${STAGING_KERNEL_DIR}/.config-$i ${STAGING_KERNEL_DIR}/.config
-		touch ${STAGING_KERNEL_DIR}/.config # ensure that it is newer
+		rm -f ${WORKDIR}/kernel-source/.config
+		cp ${WORKDIR}/kernel-source/.config-$i ${WORKDIR}/kernel-source/.config
+		touch ${WORKDIR}/kernel-source/.config # ensure that it is newer
 		# do_make_scripts
 		bbnote "make scripts for MACH=$MACH, config=.config-$i"
 		make CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${KERNEL_AR}" \
-			-C ${STAGING_KERNEL_DIR} scripts
+			-C ${WORKDIR}/kernel-source scripts silentoldconfig
 		bbnote "oe_runmake in ${WORKDIR}/git-$i MACH=$MACH"
 		rm -f ${WORKDIR}/build
 		ln -s git-$i ${WORKDIR}/build
 		cd ${WORKDIR}/build
-		oe_runmake KERNEL_PATH=${STAGING_KERNEL_DIR}   \
-			KERNEL_SRC=${STAGING_KERNEL_DIR}    \
+		oe_runmake KERNEL_PATH=${WORKDIR}/kernel-source \
+			KERNEL_SRC=${WORKDIR}/kernel-source \
 			KERNEL_VERSION=${KERNEL_VERSION}    \
-			-C ${STAGING_KERNEL_DIR}   \
 			$MACH=1 \
 			M=${WORKDIR}/build V=1 \
 			ARCH=sh \
+			KBUILD_NOPEDANTIC=1 \
 			PLAYER191=player191 \
 			DRIVER_TOPDIR="${WORKDIR}/git-$i" \
-			KERNEL_LOCATION="${STAGING_KERNEL_DIR}" \
-			CONFIG_KERNEL_BUILD="${STAGING_KERNEL_DIR}" \
-			CONFIG_KERNEL_PATH="${STAGING_KERNEL_DIR}" \
+			KERNEL_LOCATION="${WORKDIR}/kernel-source" \
+			CONFIG_KERNEL_BUILD="${WORKDIR}/kernel-source" \
+			CONFIG_KERNEL_PATH="${WORKDIR}/kernel-source" \
 			CONFIG_MODULES_PATH="${D}" \
 			CONFIG_PLAYER_191=y \
 			CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \
 			${PARALLEL_MAKE} \
-			modules
+			all
 	done
 }
+
+#			CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include -I${WORKDIR}/build/include" \
+#
 
 do_install() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
@@ -107,33 +118,33 @@ do_install() {
 		if [ $i = 7162 ]; then
 			MACH=SPARK7162
 		fi
-		rm -f ${STAGING_KERNEL_DIR}/.config
-		cp ${STAGING_KERNEL_DIR}/.config-$i ${STAGING_KERNEL_DIR}/.config
-		touch ${STAGING_KERNEL_DIR}/.config # ensure that it is newer
+		rm -f ${WORKDIR}/kernel-source/.config
+		cp ${WORKDIR}/kernel-source/.config-$i ${WORKDIR}/kernel-source/.config
+		touch ${WORKDIR}/kernel-source/.config # ensure that it is newer
 		# do_make_scripts
-		bbnote "make scripts for MACH=$MACH, config=.config-$i"
+		# bbnote "make scripts for MACH=$MACH, config=.config-$i"
 		make CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${KERNEL_AR}" \
-			-C ${STAGING_KERNEL_DIR} scripts
+			-C ${WORKDIR}/kernel-source scripts silentoldconfig
 		bbnote "oe_runmake modules_install in ${WORKDIR}/git-$i MACH=$MACH"
 		rm -f ${WORKDIR}/build
 		ln -s git-$i ${WORKDIR}/build # this avoids binaries differing due to pathnames
 		cd ${WORKDIR}/build
-		oe_runmake KERNEL_PATH=${STAGING_KERNEL_DIR}   \
-			KERNEL_SRC=${STAGING_KERNEL_DIR}    \
+		oe_runmake KERNEL_PATH=${WORKDIR}/kernel-source \
+			KERNEL_SRC=${WORKDIR}/kernel-source \
 			KERNEL_VERSION=${KERNEL_VERSION}    \
-			-C ${STAGING_KERNEL_DIR}   \
 			$MACH=1 \
 			M=${WORKDIR}/build V=1 \
 			ARCH=sh \
+			KBUILD_NOPEDANTIC=1 \
 			PLAYER191=player191 \
 			DRIVER_TOPDIR="${WORKDIR}/git-$i" \
-			KERNEL_LOCATION="${STAGING_KERNEL_DIR}" \
-			CONFIG_KERNEL_BUILD="${STAGING_KERNEL_DIR}" \
-			CONFIG_KERNEL_PATH="${STAGING_KERNEL_DIR}" \
+			KERNEL_LOCATION="${WORKDIR}/kernel-source" \
+			CONFIG_KERNEL_BUILD="${WORKDIR}/kernel-source" \
+			CONFIG_KERNEL_PATH="${WORKDIR}/kernel-source" \
 			CONFIG_MODULES_PATH="${D}" \
 			CONFIG_PLAYER_191=y \
 			CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \
-			INSTALL_MOD_PATH=${D} modules_install
+			INSTALL_MOD_PATH=${D} install
 		mkdir ${D}/lib/modules/$i
 		mv ${D}/lib/modules/${KERNEL_VERSION} ${D}/lib/modules/$i
 	done
@@ -210,6 +221,7 @@ FILES_${PN} += " \
 	${MOD7111}/pti		${MOD7162}/pti \
 	${MOD7111}/smartcard	${MOD7162}/smartcard \
 	${MOD7111}/stgfb	${MOD7162}/stgfb \
+				${MOD7162}/i2c_spi \
 	/etc/init.d \
 	/etc/rcS.d \
 "
