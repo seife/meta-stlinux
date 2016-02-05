@@ -55,8 +55,10 @@ do_install_append() {
 	install ${WORKDIR}/lircd.init ${D}${sysconfdir}/init.d/lircd
 	install ${WORKDIR}/lircexec.init ${D}${sysconfdir}/init.d/lircexec
         install -d ${D}${datadir}/lirc/
-        cp -pPR ${S}/remotes ${D}${datadir}/lirc/
+	cp -PR --preserve=mode,timestamps ${S}/remotes ${D}${datadir}/lirc/
 	rm -rf ${D}/dev
+	# remove fifos from package, do_package_qa might choke on them.
+	find ${D}/ -type p -print -delete
         rm -rf  ${D}/bin/pronto2lirc 
 }
 
