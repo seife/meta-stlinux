@@ -49,6 +49,9 @@ IMAGE_DEPENDS_spark71xx-usbimg = " \
 			${IMAGE_BOOTLOADER} \
 			"
 
+# ensure the ext3 image is built before the usb image build starts
+IMAGE_TYPEDEP_spark71xx-usbimg = "${SDIMG_ROOTFS_TYPE}"
+
 # SD card image name
 SDIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.spark71xx-usbimg"
 
