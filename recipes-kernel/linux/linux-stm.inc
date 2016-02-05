@@ -89,6 +89,7 @@ do_install() {
 	done
 	ln -s 7111/${KERNEL_VERSION} ${D}/lib/modules/
 	kdir=${STAGING_KERNEL_DIR}
+	install -m 644 include/linux/utsrelease.h ${STAGING_KERNEL_BUILDDIR}/include/linux/
 	# $PWD is git-7111
 	if [ -f include/linux/bounds.h ]; then
 		mkdir -p $kdir/include/linux
