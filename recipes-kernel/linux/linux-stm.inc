@@ -19,6 +19,10 @@ PARALLEL_MAKEINST = ""
 
 # KERNEL_VERSION = "${@get_kernelversion('${WORKDIR}/git-7111')}"
 
+do_configure() {
+	kernel_do_configure
+}
+
 kernel_do_configure() {
 	cd ${S}
 	if test -e scripts/Makefile.fwinst ; then
@@ -64,8 +68,18 @@ do_compile_kernelmodules() {
 
 do_install() {
 	kerneldir=${D}${KERNEL_SRC_PATH}
-	bbnote "running do_shared_workdir"
-	do_shared_workdir
+	# hack, old yocto (dizzy) does not have do_shared_workdir
+	if type do_shared_workdir > /dev/null; then
+		bbnote "running do_shared_workdir"
+		do_shared_workdir
+	fi
+	MY_KDIR="${STAGING_KERNEL_BUILDDIR}"
+	kdir=${STAGING_KERNEL_DIR}
+	if [ x"$MY_KDIR" = x"" ]; then
+		# old (dizzy) location...
+		MY_KDIR=$kerneldir
+		kdir=$kerneldir
+	fi
 	for i in 7162 7111; do
 		bbnote "changing into ${WORKDIR}/git-$i"
 		cd ${WORKDIR}/git-$i
@@ -73,12 +87,13 @@ do_install() {
 		rm -fr ${kerneldir}/Documentation
 		bbnote "running kernel_do_install"
 		kernel_do_install
+		bbnote "running kernel_do_install finished"
 		mkdir ${D}/lib/modules/$i
 		rm -f ${D}/lib/modules/${KERNEL_VERSION}/build
 		mv ${D}/lib/modules/${KERNEL_VERSION} ${D}/lib/modules/$i
-		bbnote "in ${WORKDIR}/git-$i, installing .config to ${STAGING_KERNEL_BUILDDIR}/.config-$i"
-		cp -av .config ${STAGING_KERNEL_BUILDDIR}/.config-$i
-		cp -av .config ${STAGING_KERNEL_BUILDDIR}/.config
+		bbnote "in ${WORKDIR}/git-$i, installing .config to ${MY_KDIR}/.config-$i"
+		cp -av .config ${MY_KDIR}/.config-$i
+		cp -av .config ${MY_KDIR}/.config
 		# do not copy to -7111...
 		[ $i = 7111 ] && break
 		cp -a ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}-$i
@@ -88,8 +103,7 @@ do_install() {
 		done
 	done
 	ln -s 7111/${KERNEL_VERSION} ${D}/lib/modules/
-	kdir=${STAGING_KERNEL_DIR}
-	install -m 644 include/linux/utsrelease.h ${STAGING_KERNEL_BUILDDIR}/include/linux/
+	install -m 644 include/linux/utsrelease.h ${MY_KDIR}/include/linux/
 	# $PWD is git-7111
 	if [ -f include/linux/bounds.h ]; then
 		mkdir -p $kdir/include/linux
@@ -98,6 +112,7 @@ do_install() {
 	if [ -f include/asm-sh/machtypes.h ]; then
 		mkdir -p $kdir/include/asm-sh
 		cp include/asm-sh/machtypes.h $kdir/include/asm-sh
+		rm -f $kdir/include/asm
 		ln -sf asm-sh $kdir/include/asm
 	fi
 	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
