@@ -94,6 +94,11 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 ## stlinux is configured like that:
 OLDEST_KERNEL = "2.6.32"
 
+## the latest available stlinux gcc patch is for 4.8.4, and 4.9 is
+## behaving "strange" -- to say the least.
+## if you are feeling brave, you can still set GCCVERSION="4.9%" in conf/local.conf ;-)
+GCCVERSION ?= "4.8.4"
+
 ## dizzy has libgcov-dev in packagegroup-core-standalone-sdk-target, but
 ## we don't build it anymore...
 RDEPENDS_packagegroup-core-standalone-sdk-target_remove = "libgcov-dev"
