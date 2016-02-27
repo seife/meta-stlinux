@@ -62,8 +62,10 @@ do_configure() {
     rm -fr ${WORKDIR}/kernel-source
     mkdir ${WORKDIR}/kernel-source
     cp -al ${STAGING_KERNEL_DIR}/. ${WORKDIR}/kernel-source
-    cp -al ${STAGING_KERNEL_BUILDDIR}/. ${WORKDIR}/kernel-source
-    rm ${WORKDIR}/kernel-source/source
+    if [ -n "${STAGING_KERNEL_BUILDDIR}" ]; then
+        cp -al ${STAGING_KERNEL_BUILDDIR}/. ${WORKDIR}/kernel-source
+        rm ${WORKDIR}/kernel-source/source
+    fi
 }
 
 # EXTRA_OEMAKE = "-e "
