@@ -24,9 +24,13 @@ EXTRA_OECONF += "\
     --with-system-zlib \
 "
 
+DEPENDS_remove_libc-baremetal := "virtual/${TARGET_PREFIX}libc-for-gcc"
+EXTRA_OECONF_append_libc-baremetal = " --without-headers"
+EXTRA_OECONF_remove_libc-baremetal = "--enable-threads=posix"
+
 EXTRA_OECONF_PATHS = "\
-    --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++/${BINV} \
-    --with-sysroot=${STAGING_DIR_TARGET} \
+    --with-gxx-include-dir=/not/exist${target_includedir}/c++/${BINV} \
+    --with-sysroot=/not/exist \
     --with-build-sysroot=${STAGING_DIR_TARGET} \
 "
 

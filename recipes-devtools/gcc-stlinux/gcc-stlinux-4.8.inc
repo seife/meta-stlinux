@@ -3,6 +3,7 @@ require gcc-common.inc
 # Third digit in PV should be incremented after a minor release
 
 PV = "4.8.4"
+PR = "r1"
 
 # BINV should be incremented to a revision after a minor gcc release
 
@@ -59,6 +60,7 @@ SRC_URI = "\
     file://0033-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch \
     file://0034-Use-the-multilib-config-files-from-B-instead-of-usin.patch \
     file://0035-wcast-qual-PR-55383.patch \
+    file://0038-gcc-4.8-build-args.patch \
     file://0040-fix-g++-sysroot.patch \
     file://0041-libtool-avoid-libdir.patch \
     file://0042-pr57748.patch \

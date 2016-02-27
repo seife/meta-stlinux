@@ -93,3 +93,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 
 ## stlinux is configured like that:
 OLDEST_KERNEL = "2.6.32"
+
+## dizzy has libgcov-dev in packagegroup-core-standalone-sdk-target, but
+## we don't build it anymore...
+RDEPENDS_packagegroup-core-standalone-sdk-target_remove = "libgcov-dev"
