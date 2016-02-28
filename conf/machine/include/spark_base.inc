@@ -31,7 +31,7 @@ PREFERRED_PROVIDER_libssl = "openssl"
 #PREFERRED_VERSION_glibc-initial-nativesdk ?= "2.10"
 
 USE_VT = "0"
-MACHINE_FEATURES = "kernel26 ext2 alsa ext3 usbhost serial"
+MACHINE_FEATURES = "kernel26 ext2 alsa ext3 usbhost"
 
 SERIAL_CONSOLE = "115200 ttyAS0"
 
