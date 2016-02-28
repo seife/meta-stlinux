@@ -66,17 +66,25 @@ IMAGE_CMD_spark71xx-usbimg () {
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE} + ${IMAGE_ROOTFS_ALIGNMENT} - 1)
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE_ALIGNED} - ${BOOT_SPACE_ALIGNED} % ${IMAGE_ROOTFS_ALIGNMENT})
 	SDIMG_SIZE=$(expr ${IMAGE_ROOTFS_ALIGNMENT} + ${BOOT_SPACE_ALIGNED} + $ROOTFS_SIZE + ${IMAGE_ROOTFS_ALIGNMENT})
+	SDIMG_ROOTOFFSET=$(expr ${BOOT_SPACE_ALIGNED} + ${IMAGE_ROOTFS_ALIGNMENT})
 
+	if dd if=/dev/zero of=/dev/null count=0 conv=sparse >/dev/null 2>&1; then
+		echo "creating sparse image"
+		SPARSE=,sparse
+	else
+		echo "not creating sparse image"
+		SPARSE=""
+	fi
 	# Initialize sdcard image file
-	dd if=/dev/zero of=${SDIMG} bs=1 count=0 seek=$(expr 1024 \* ${SDIMG_SIZE})
+	dd if=/dev/zero of=${SDIMG} bs=1k count=0 seek=${SDIMG_SIZE}
 
 	# Create partition table
 	parted -s ${SDIMG} mklabel msdos
 	# Create boot partition and mark it as bootable
-	parted -s ${SDIMG} unit KiB mkpart primary fat32 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})
+	parted -s ${SDIMG} unit KiB mkpart primary fat32 ${IMAGE_ROOTFS_ALIGNMENT} ${SDIMG_ROOTOFFSET}
 	parted -s ${SDIMG} set 1 boot on
 	# Create rootfs partition
-	parted -s ${SDIMG} unit KiB mkpart primary ext2 $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT}) $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE})
+	parted -s ${SDIMG} unit KiB mkpart primary ext2 ${SDIMG_ROOTOFFSET} $(expr ${SDIMG_ROOTOFFSET} \+ ${ROOTFS_SIZE})
 	parted ${SDIMG} print
 
 	# Create a vfat image with boot files
@@ -138,13 +146,14 @@ EOF
 	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}//image-version-info ::
 
 	# Burn Partitions
-	dd if=${WORKDIR}/boot.img of=${SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024)
+	dd if=${WORKDIR}/boot.img of=${SDIMG} conv=notrunc${SPARSE} bs=1k seek=${IMAGE_ROOTFS_ALIGNMENT}
 	# If SDIMG_ROOTFS_TYPE is a .xz file use xzcat
+	CAT=cat
 	if [[ "$SDIMG_ROOTFS_TYPE" == *.xz ]]
 	then
-		xzcat ${SDIMG_ROOTFS} | dd of=${SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${BOOT_SPACE_ALIGNED} + ${IMAGE_ROOTFS_ALIGNMENT} \* 1024)
+		xzcat ${SDIMG_ROOTFS} | dd of=${SDIMG} conv=notrunc${SPARSE} bs=1k seek=${SDIMG_ROOTOFFSET}
 	else
-		dd if=${SDIMG_ROOTFS} of=${SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${BOOT_SPACE_ALIGNED} + ${IMAGE_ROOTFS_ALIGNMENT} \* 1024)
+		dd if=${SDIMG_ROOTFS} of=${SDIMG} conv=notrunc${SPARSE} bs=1k seek=${SDIMG_ROOTOFFSET}
 	fi
 }
 
