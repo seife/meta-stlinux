@@ -54,7 +54,8 @@ JFFS2_SUM_EXTRA_ARGS = " \
 "
 
 INHERIT += "usb_image-spark71xx"
-IMAGE_FSTYPES ?= "tar.gz ubi ${SDIMG_ROOTFS_TYPE} jffs2.sum spark71xx-usbimg"
+# IMAGE_FSTYPES ?= "tar.gz ubi ${SDIMG_ROOTFS_TYPE} jffs2.sum spark71xx-usbimg"
+IMAGE_FSTYPES ?= "tar.gz ${SDIMG_ROOTFS_TYPE} jffs2.sum spark71xx-usbimg"
 
 IMAGE_CLASSES += "usb_image-spark71xx"
 INITRAMFS_FSTYPES = "ext2.gz spark-updt"
@@ -73,10 +74,11 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
                                      lrzsz \
                                      mtd-utils \
                                      mtd-utils-jffs2 \
-                                     mtd-utils-ubifs \
                                      mtd-utils-misc \
                                      tdt-driver \
 "
+
+# MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " mtd-utils-ubifs "
 
 ##
 ## We have a RTC in aotom thx to seife.
