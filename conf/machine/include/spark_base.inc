@@ -71,7 +71,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
                                      ustslave \
                                      libmmeimage \
                                      lirc \
-                                     lrzsz \
                                      mtd-utils \
                                      mtd-utils-jffs2 \
                                      mtd-utils-misc \
