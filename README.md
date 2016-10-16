@@ -7,7 +7,7 @@ It should be used with openembedded-core (not old-style org.openembedded.dev).
 This layer in its entirety depends on:
 
     URI: http://git.yoctoproject.org/git/poky
-    branch: dizzy
+    branch: krogoth
     revision: HEAD
 
 How to use it with yocto
@@ -18,7 +18,7 @@ How to use it with yocto
 
 ## Switch to dizzy branch
     cd poky
-    git checkout -b dizzy origin/dizzy
+    git checkout -b krogoth origin/krogoth
 
 Independent Steps from poky/oe-core
 -----------------------------------
