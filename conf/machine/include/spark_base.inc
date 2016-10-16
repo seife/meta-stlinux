@@ -54,8 +54,8 @@ JFFS2_SUM_EXTRA_ARGS = " \
 "
 
 INHERIT += "usb_image-spark71xx"
-# IMAGE_FSTYPES ?= "tar.gz ubi ${SDIMG_ROOTFS_TYPE} jffs2.sum spark71xx-usbimg"
-IMAGE_FSTYPES ?= "tar.gz ${SDIMG_ROOTFS_TYPE} jffs2.sum spark71xx-usbimg"
+# IMAGE_FSTYPES ?= "tar.gz ubi ${USBIMG_ROOTFS_TYPE} jffs2.sum spark71xx-usbimg"
+IMAGE_FSTYPES ?= "tar.gz ${USBIMG_ROOTFS_TYPE} jffs2.sum spark71xx-usbimg"
 
 IMAGE_CLASSES += "usb_image-spark71xx"
 INITRAMFS_FSTYPES = "ext2.gz spark-updt"
