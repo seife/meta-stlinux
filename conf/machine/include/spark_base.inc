@@ -57,7 +57,7 @@ INHERIT += "usb_image-spark71xx"
 # IMAGE_FSTYPES ?= "tar.gz ubi ${USBIMG_ROOTFS_TYPE} jffs2.sum spark71xx-usbimg"
 IMAGE_FSTYPES ?= "tar.gz ${USBIMG_ROOTFS_TYPE} jffs2.sum spark71xx-usbimg"
 
-IMAGE_CLASSES += "usb_image-spark71xx"
+IMAGE_CLASSES += "usb_image-spark71xx update_image-spark"
 INITRAMFS_FSTYPES = "ext2.gz spark-updt"
 
 MACHINE_EXTRA_RRECOMMENDS = "kernel-modules"
