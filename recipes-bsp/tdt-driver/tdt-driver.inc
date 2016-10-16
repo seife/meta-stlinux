@@ -103,13 +103,13 @@ do_compile() {
 			CONFIG_KERNEL_PATH="${WORKDIR}/kernel-source" \
 			CONFIG_MODULES_PATH="${D}" \
 			CONFIG_PLAYER_191=y \
-			CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \
 			${PARALLEL_MAKE} \
 			all
 	done
 }
 
 #			CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include -I${WORKDIR}/build/include" \
+#			CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \
 #
 
 do_install() {
@@ -145,7 +145,6 @@ do_install() {
 			CONFIG_KERNEL_PATH="${WORKDIR}/kernel-source" \
 			CONFIG_MODULES_PATH="${D}" \
 			CONFIG_PLAYER_191=y \
-			CCFLAGSY="-I${STAGING_DIR_HOST}/usr/include" \
 			INSTALL_MOD_PATH=${D} install
 		mkdir ${D}/lib/modules/$i
 		mv ${D}/lib/modules/${KERNEL_VERSION} ${D}/lib/modules/$i
