@@ -61,6 +61,7 @@ FATPAYLOAD ?= ""
 IMAGEDATESTAMP = "${@time.strftime('%Y.%m.%d',time.gmtime())}"
 # https://www.mail-archive.com/yocto@yoctoproject.org/msg29667.html
 IMAGE_CMD_spark71xx-usbimg[vardepsexclude] = "DATETIME"
+IMAGE_CMD_spark71xx-usbimg[vardepsexclude] += "IMAGEDATESTAMP"
 
 IMAGE_CMD_spark71xx-usbimg () {
 
