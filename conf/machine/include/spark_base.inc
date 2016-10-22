@@ -63,8 +63,8 @@ INITRAMFS_FSTYPES = "ext2.gz spark-updt"
 MACHINE_EXTRA_RRECOMMENDS = "kernel-modules"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
-                                     stlinux24-sh4-stx7111-fdma-firmware \
-                                     stlinux24-sh4-stmfb-firmware-stx7111 \
+                                     stlinux24-sh4-fdma-firmware-spark \
+                                     stlinux24-sh4-stmfb-firmware-spark \
                                      stslave-fw \
                                      fp-control \
                                      stfbcontrol \

@@ -16,7 +16,6 @@ SRC_URI = "git://github.com/project-magpie/linux-sh4-2.6.32.y.git;protocol=https
            file://console.map.c-workaround-for-gcc-4.8.2-build.patch \
 "
 
-DEPENDS += " \
-	stlinux24-sh4-stx7111-fdma-firmware \
-	stlinux24-sh4-stx7105-fdma-firmware \
+RDEPENDS_${PN} += " \
+	stlinux24-sh4-fdma-firmware-spark \
 "
