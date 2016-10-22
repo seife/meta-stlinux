@@ -1,12 +1,13 @@
 DESCRIPTION = "STM ST-231 Coprocessor firmware"
 LICENSE = "CLOSED"
 SECTION = "base"
-PACKAGE_ARCH = "all"
 
 # fix architecture mismatch QA error
 INSANE_SKIP_${PN} = "arch"
+# no empty -dev and -dbg package
+PACKAGES = "${PN}"
 
-PR = "r4"
+PR = "r5"
 
 BINARY_STSLAVE_FW_PATH ?= "/data/stslave_fw"
 FIRMWARE_DIR ?= "/lib/firmware"
