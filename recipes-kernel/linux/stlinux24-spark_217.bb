@@ -42,6 +42,6 @@ SRC_URI = " \
 	file://linux-sh4-spark-dvb-as102.patch;patch=1 \
 "
 
-RDEPENDS_${PN} += " \
+DEPENDS += " \
 	stlinux24-sh4-fdma-firmware-spark \
 "
