@@ -13,7 +13,7 @@ INSANE_SKIP_kernel-dev = "staticdev"
 # git://github.com/oe-alliance/oe-alliance-core.git
 #	meta-brands/meta-fulan/recipes-linux/linux-fulan/
 SRC_URI = " \
-	git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=http;branch=stmicro \
+	git://github.com/seife/linux-sh4-2.6.32.y.git;protocol=http;branch=stmicro \
 	file://linux-sh4-linuxdvb_stm24_${PATCH_STR}.patch;patch=1 \
 	file://linux-sh4-sound_stm24_${PATCH_STR}.patch;patch=1 \
 	file://linux-sh4-time_stm24_${PATCH_STR}.patch;patch=1 \
