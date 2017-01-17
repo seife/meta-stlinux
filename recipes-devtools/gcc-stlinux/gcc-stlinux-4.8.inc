@@ -70,6 +70,7 @@ SRC_URI = "\
     file://0047-repomembug.patch \
     file://0049-Enable-SPE-AltiVec-generation-on-powepc-linux-target.patch \
     file://target-gcc-includedir.patch \
+    file://0076-Fix-build-with-gcc-6.patch \
     file://gcc-4.7.0-sh-use-gnu-hash-style.patch \
     file://gcc-4.8.4-stm-150128.patch \
 "
