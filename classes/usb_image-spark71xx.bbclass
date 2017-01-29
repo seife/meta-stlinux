@@ -58,11 +58,12 @@ USBIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.spark71xx-usbimg"
 # Additional files and/or directories to be copied into the vfat partition from the IMAGE_ROOTFS.
 FATPAYLOAD ?= ""
 
-IMAGEDATESTAMP = "${@time.strftime('%Y.%m.%d',time.gmtime())}"
 # https://www.mail-archive.com/yocto@yoctoproject.org/msg29667.html
+# ### this does not work. DATETIME Is added to vardepsexclude in image.bbclass python code.
 IMAGE_CMD_spark71xx-usbimg[vardepsexclude] = "DATETIME"
-IMAGE_CMD_spark71xx-usbimg[vardepsexclude] += "IMAGEDATESTAMP"
+IMAGE_CMD_spark71xx-usbimg[vardepsexclude] += "DATE"
 IMAGE_CMD_spark71xx-usbimg[vardepsexclude] += "IMAGE_NAME"
+
 
 IMAGE_CMD_spark71xx-usbimg () {
 
@@ -145,8 +146,8 @@ EOF
 	mkimage -A sh -O linux -T script -C none -a 0 -e 0 -n "autoscript" -d ${WORKDIR}/script.scr ${WORKDIR}/script.img
 	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}//script.img ::
 
-	# Add stamp file
-	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${WORKDIR}/image-version-info
+	# Add stamp file, IMAGE_NAME contains DATETIME
+	echo "${IMAGE_NAME}" > ${WORKDIR}/image-version-info
 	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}//image-version-info ::
 
 	# Burn Partitions
