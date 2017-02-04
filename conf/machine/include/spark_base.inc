@@ -1,7 +1,7 @@
 require conf/machine/include/tune-sh4.inc
 TARGET_ARCH = "sh4"
-STLINUX_SH_UPD_SRPMS = "http://ftp.stlinux.com/pub/stlinux/2.4/updates/SRPMS"
-STLINUX_SH_UPD_RPMS = "http://ftp.stlinux.com/pub/stlinux/2.4/updates/RPMS/sh4/"
+STLINUX_SH_UPD_SRPMS = "http://archive.stlinux.com/stlinux/2.4/updates/SRPMS"
+STLINUX_SH_UPD_RPMS = "http://archive.stlinux.com/stlinux/2.4/updates/RPMS/sh4"
 
 STM_PATCH_STR ??= "0217"
 # needed to select proper .bb file
