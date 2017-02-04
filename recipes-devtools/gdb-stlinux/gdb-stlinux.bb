@@ -10,14 +10,17 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                 file://COPYING3;md5=d32239bcb673463ab874e80d47fae504 \
                 file://COPYING3.LIB;md5=6a6a8e020838b23406c81b19c1d46df6"
 
-PV = "7.6-50"
+PV = "7.6-51"
 
-SRC_URI = "${STLINUX_SH_UPD_SRPMS}/stlinux24-target-gdb-${PV}.src.rpm"
-SRC_URI[md5sum] = "cb03a49ed9c2dffb506057aed9b71259"
-SRC_URI[sha256sum] = "6ec1201d752aaffe86d83d6b0b9137b1990e00eb528c2d3db2651f3a2d3e257d"
+SRC_URI = " \
+	${STLINUX_SH_UPD_SRPMS}/stlinux24-target-gdb-${PV}.src.rpm \
+"
+SRC_URI[md5sum] = "1c97e0dde27dfb8ff8c7646ade2b622e"
+SRC_URI[sha256sum] = "a95d1c75c1351756826279a9d96e503bef64e23dfdfa82310921499e4afc1d89"
 
 LOCAL_SRC = "\
             file://${WORKDIR}/gdb-7.6-stlinux.tar.bz2 \
+            file://${WORKDIR}/gdb-7.6-libexpat.patch \
 "
 
 B = "${WORKDIR}/build-${TARGET_SYS}"
