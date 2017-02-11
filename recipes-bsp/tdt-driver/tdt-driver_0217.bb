@@ -11,6 +11,7 @@ SRC_URI = " \
     file://silence_tuner_printk.patch;patch=1 \
     file://silence_stmfb_printk.patch;patch=1 \
     file://silence_stmfb0104_printk.patch;patch=1 \
+    file://silence_stmerger_printk.patch;patch=1 \
     file://tdt-driver-avoid-buildtime.patch \
     file://ddt-driver-bpamem-auto-deallocate.patch \
     file://ddt-driver-stv090x-speedup-read_snr.patch \
