@@ -49,7 +49,6 @@ do_configure() {
     rm -f include/asm
     ln -s ${STAGING_KERNEL_BUILDDIR}/include/asm-sh include/asm
     rm -f .config
-    printf "export CONFIG_PLAYER_191=y\nexport CONFIG_MULTICOM324=y\n" > .config
     # disable wireless build
     # sed -i 's/^\(obj-y.*+= wireless\)/# \1/' Makefile
     # disable useless simu_button
@@ -58,33 +57,70 @@ do_configure() {
     rm -fr ${WORKDIR}/git-7111
     cp -al ${WORKDIR}/git ${WORKDIR}/git-7162
     cp -al ${WORKDIR}/git ${WORKDIR}/git-7111
+    printf "export CONFIG_PLAYER_191=y\nexport CONFIG_MULTICOM324=y\nexport SPARK=y\n"     > ${WORKDIR}/git-7111/.config
+    printf "export CONFIG_PLAYER_191=y\nexport CONFIG_MULTICOM324=y\nexport SPARK7162=y\n" > ${WORKDIR}/git-7162/.config
 
     rm -fr ${WORKDIR}/kernel-source
     mkdir ${WORKDIR}/kernel-source
     cp -al ${STAGING_KERNEL_DIR}/. ${WORKDIR}/kernel-source
     if [ -n "${STAGING_KERNEL_BUILDDIR}" ]; then
         cp -al ${STAGING_KERNEL_BUILDDIR}/. ${WORKDIR}/kernel-source
-        rm ${WORKDIR}/kernel-source/source
+        rm -f ${WORKDIR}/kernel-source/source
     fi
+    rm -f ${WORKDIR}/kernel-source/Makefile
+    cp ${STAGING_KERNEL_DIR}/Makefile ${WORKDIR}/kernel-source/
+    rm ${WORKDIR}/kernel-source/scripts/mkmakefile
+    printf "#!/bin/bash\ntrue\n" > ${WORKDIR}/kernel-source/scripts/mkmakefile
+    chmod 0755 ${WORKDIR}/kernel-source/scripts/mkmakefile
 }
 
 # EXTRA_OEMAKE = "-e "
+oe_runmake_call() {
+	export KBUILD_OUTPUT=${WORKDIR}/kernel-source
+	bbnote make "$@"
+	make "$@"
+}
+
+do_make_scripts() {
+	bbnote "do_make_scripts ignored..."
+	true
+}
+
+restore_configfiles () {
+	export KBUILD_OUTPUT=${WORKDIR}/kernel-source
+	rm -f .config
+	cp .config-$i .config
+	touch .config # ensure that it is newer
+	cp -a System.map-${KERNEL_VERSION}-$i System.map-${KERNEL_VERSION}
+	cp -a Module.symvers-$i Module.symvers
+# skipped for now
+#	for j in auto.conf auto.conf.cmd tristate.conf; do
+#		rm -f include/config/$j
+#		cp include/config/$j-$i include/config/$j
+#		touch include/config/$j
+#	done
+#	for j in zconf.tab.c zconf.hash.c lex.zconf.c; do
+#		test -e scripts/kconfig/$j && continue
+#		cp -a scripts/kconfig/${j}_shipped scripts/kconfig/$j
+#	done
+}
 
 do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	for i in 7162 7111; do
-		cd ${WORKDIR}/git-$i
 		MACH=SPARK
 		if [ $i = 7162 ]; then
 			MACH=SPARK7162
 		fi
-		rm -f ${WORKDIR}/kernel-source/.config
-		cp ${WORKDIR}/kernel-source/.config-$i ${WORKDIR}/kernel-source/.config
-		touch ${WORKDIR}/kernel-source/.config # ensure that it is newer
+		cd ${WORKDIR}/kernel-source
+		restore_configfiles
 		# do_make_scripts
 		bbnote "make scripts for MACH=$MACH, config=.config-$i"
 		make CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${KERNEL_AR}" \
-			-C ${WORKDIR}/kernel-source scripts silentoldconfig
+			scripts silentoldconfig
+		ls -l .config
+		grep ^CONFIG_SH_ST_ .config
+		cd ${WORKDIR}/git-$i
 		bbnote "oe_runmake in ${WORKDIR}/git-$i MACH=$MACH"
 		rm -f ${WORKDIR}/build
 		ln -s git-$i ${WORKDIR}/build
@@ -115,19 +151,18 @@ do_compile() {
 do_install() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	for i in 7162 7111; do
-		cd ${WORKDIR}/git-$i
 		MACH=SPARK
 		if [ $i = 7162 ]; then
 			MACH=SPARK7162
 		fi
-		rm -f ${WORKDIR}/kernel-source/.config
-		cp ${WORKDIR}/kernel-source/.config-$i ${WORKDIR}/kernel-source/.config
-		touch ${WORKDIR}/kernel-source/.config # ensure that it is newer
+		cd ${WORKDIR}/kernel-source
+		restore_configfiles
 		# do_make_scripts
 		# bbnote "make scripts for MACH=$MACH, config=.config-$i"
 		make CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${KERNEL_AR}" \
-			-C ${WORKDIR}/kernel-source scripts silentoldconfig
+			scripts silentoldconfig
 		bbnote "oe_runmake modules_install in ${WORKDIR}/git-$i MACH=$MACH"
+		cd ${WORKDIR}/git-$i
 		rm -f ${WORKDIR}/build
 		ln -s git-$i ${WORKDIR}/build # this avoids binaries differing due to pathnames
 		cd ${WORKDIR}/build
@@ -219,7 +254,7 @@ FILES_${PN} += " \
 	${MOD7111}/frontends	${MOD7162}/frontends \
 	${MOD7111}/multicom	${MOD7162}/multicom \
 	${MOD7111}/player2	${MOD7162}/player2 \
-	${MOD7111}/pti		${MOD7162}/pti \
+	${MOD7111}/pti*		${MOD7162}/pti* \
 	${MOD7111}/smartcard	${MOD7162}/smartcard \
 	${MOD7111}/stgfb	${MOD7162}/stgfb \
 				${MOD7162}/i2c_spi \
