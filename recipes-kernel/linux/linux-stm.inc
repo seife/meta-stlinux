@@ -60,6 +60,7 @@ do_compile_kernelmodules() {
 		cd ${WORKDIR}/git-$i
 		if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 			oe_runmake modules CC="${KERNEL_CC}" LD="${KERNEL_LD}"
+			cp Module.symvers ${STAGING_KERNEL_BUILDDIR}/Module.symvers-$i
 		else
 			bbnote "no modules to compile"
 		fi
@@ -83,6 +84,13 @@ do_install() {
 	for i in 7162 7111; do
 		bbnote "changing into ${WORKDIR}/git-$i"
 		cd ${WORKDIR}/git-$i
+		#
+		cp System.map $MY_KDIR/System.map-${KERNEL_VERSION}-$i
+		cp Module.symvers $MY_KDIR/Module.symvers-$i
+		for j in auto.conf auto.conf.cmd tristate.conf; do
+			cp -a include/config/$j $MY_KDIR/include/config/$j-$i || bbfail $j-$i
+		done
+		#
 		# kernel_do_install does mkdir -p .../Documentation and fails...
 		rm -fr ${kerneldir}/Documentation
 		bbnote "running kernel_do_install"
