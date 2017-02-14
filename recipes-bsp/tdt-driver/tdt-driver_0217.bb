@@ -15,6 +15,7 @@ SRC_URI = " \
     file://tdt-driver-avoid-buildtime.patch \
     file://ddt-driver-bpamem-auto-deallocate.patch \
     file://ddt-driver-stv090x-speedup-read_snr.patch \
+    file://spark-fix-fe-caps.patch \
     file://bpamem-new-toolchain-workaround.diff \
     file://aotom_udev.rules \
     file://tdt-driver.init \
@@ -30,4 +31,4 @@ require tdt-driver.inc
 SUMMARY = "Driver modules from TDT"
 DESCRIPTION = "Driver modules from TDT"
 
-PR = "r4"
+PR = "r5"
