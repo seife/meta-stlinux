@@ -40,6 +40,7 @@ SRC_URI = " \
 	file://linux-sh4-lirc_stm_stm24_${PATCH_STR}.patch;patch=1 \
 	file://linux-sh4-spark-af901x-NXP-TDA18218.patch;patch=1 \
 	file://linux-sh4-spark-dvb-as102.patch;patch=1 \
+	file://linux-sh4-silence-snd_conv_i2sspdif.patch;patch=1 \
 	file://linux-timeconst-new-perl.patch;patch=1 \
 "
 
