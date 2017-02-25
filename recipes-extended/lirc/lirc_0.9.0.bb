@@ -10,13 +10,13 @@ DEPENDS = "virtual/kernel libusb"
 RDEPENDS_lirc-exec = "lirc"
 RRECOMMENDS_${PN} = "lirc-exec kernel-module-uinput"
 
-PR = "${INCPR}.4"
+PR = "${INCPR}.5"
 
 
 CFLAGS_append = " -DUINPUT_NEUTRINO_HACK "
 
 
-EXTRA_OECONF += "--with-kerneldir=${STAGING_KERNEL_DIR} ${DRIVER} --without-x --with-driver=none --with-driver=userspace "
+EXTRA_OECONF += "--with-kerneldir=${STAGING_KERNEL_DIR} ${DRIVER} --without-x --with-driver=lirc_dev"
 
 
 
