@@ -1,8 +1,8 @@
-Index: b/player2_191/linux/drivers/media/dvb/stm/dvb/st-merger.c
+Index: b/player2/linux/drivers/media/dvb/stm/dvb/st-merger.c
 ===================================================================
---- a/player2_191/linux/drivers/media/dvb/stm/dvb/st-merger.c
-+++ b/player2_191/linux/drivers/media/dvb/stm/dvb/st-merger.c
-@@ -1189,10 +1189,10 @@ void stm_tsm_init(int use_cimax)
+--- a/player2/linux/drivers/media/dvb/stm/dvb/st-merger.c
++++ b/player2/linux/drivers/media/dvb/stm/dvb/st-merger.c
+@@ -1459,10 +1459,10 @@ void stm_tsm_init(int use_cimax)
  	{
  		/* bypass cimax */
  		int n;
@@ -15,12 +15,12 @@ Index: b/player2_191/linux/drivers/media/dvb/stm/dvb/st-merger.c
  		}
  		else
  		{
-@@ -1351,7 +1351,7 @@ void stm_tsm_init(int use_cimax)
- 				   TSM_PRIORITY(0xf) | TSM_STREAM_ON | TSM_ADD_TAG_BYTES ,
+@@ -1653,7 +1653,7 @@ void stm_tsm_init(int use_cimax)
+ 				   TSM_PRIORITY(0xf) | TSM_STREAM_ON | TSM_ADD_TAG_BYTES,
  				   tsm_io + TSM_STREAM_CONF(chan));
- #else // !defined(ADB_BOX) && !defined(SAGEMCOM88)
+ #else
 -			printk("TsinMode = Parallel *st-merger*\n\t");
 +//			printk("TsinMode = Parallel *st-merger*\n\t");
  			writel((readl(tsm_io + TSM_STREAM_CONF(chan)) & TSM_RAM_ALLOC_START(0xff)) |
  				   (options & STM_SERIAL_NOT_PARALLEL ? TSM_SERIAL_NOT_PARALLEL : 0) |
- 				   (options & STM_INVERT_CLOCK        ? TSM_INVERT_BYTECLK : 0) |
+ 				   (options & STM_INVERT_CLOCK ? TSM_INVERT_BYTECLK : 0) |

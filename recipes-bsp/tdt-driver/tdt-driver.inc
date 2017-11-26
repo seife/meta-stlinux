@@ -22,6 +22,8 @@ FILES = ""
 S = "${WORKDIR}/git"
 
 do_configure() {
+    ### start ####
+    # this is to theoretically allow to build older non-duckbox.git driver
     if [ -L include/stmfb ]; then
         rm include/stmfb
     fi
@@ -40,12 +42,13 @@ do_configure() {
     if [ -L multicom ]; then
         rm multicom
     fi
-    ln -s stmfb-3.1_stm24_${STMFB} ${S}/include/stmfb
-    ln -s ${PLAYER2_INCLUDES} ${S}/include/player2
-    ln -s ../multicom-3.2.4/include ${S}/include/multicom
-    ln -s player2_191 ${S}/player2
-    ln -s multicom-3.2.4 ${S}/multicom
-    ln -s stmfb-3.1_stm24_${STMFB} ${S}/stgfb/stmfb
+    test -e ${S}/include/stmfb    || ln -s stmfb-3.1_stm24_${STMFB} ${S}/include/stmfb
+    test -e ${S}/include/player2  || ln -s ${PLAYER2_INCLUDES} ${S}/include/player2
+    test -e ${S}/include/multicom || ln -s ../multicom-3.2.4/include ${S}/include/multicom
+    test -e ${S}/player2          || ln -s player2_191 ${S}/player2
+    test -e ${S}/multicom         || ln -s multicom-3.2.4 ${S}/multicom
+    test -e ${S}/stgfb/stmfb      || ln -s stmfb-3.1_stm24_${STMFB} ${S}/stgfb/stmfb
+    ### end ####
     rm -f include/asm
     ln -s ${STAGING_KERNEL_BUILDDIR}/include/asm-sh include/asm
     rm -f .config

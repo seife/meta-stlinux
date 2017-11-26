@@ -1,8 +1,8 @@
-diff --git a/e2_proc/e2_proc_main.c b/e2_proc/e2_proc_main.c
-index ffb0c1d..0f02fea 100644
+Index: b/e2_proc/e2_proc_main.c
+===================================================================
 --- a/e2_proc/e2_proc_main.c
 +++ b/e2_proc/e2_proc_main.c
-@@ -114,6 +114,8 @@
+@@ -118,6 +118,8 @@
   *  |           |
   *  |           --------- led0_pattern
   *  |           |
@@ -11,7 +11,7 @@ index ffb0c1d..0f02fea 100644
   *  |           --------- led_pattern_speed
   *  |           |
   *  |           |
-@@ -200,6 +202,10 @@
+@@ -206,6 +208,10 @@
   *  |           --------- dst_width   |
   *  |           |                     |
   *  |           --------- dst_height /
@@ -22,7 +22,7 @@ index ffb0c1d..0f02fea 100644
   *
   */
  
-@@ -549,6 +555,10 @@ struct ProcStructure_s e2Proc[] =
+@@ -602,6 +608,10 @@ struct ProcStructure_s e2Proc[] =
  {
  	{cProcEntry, "progress"                                                         , NULL, NULL, NULL, NULL, ""},
  
@@ -33,7 +33,7 @@ index ffb0c1d..0f02fea 100644
  	{cProcEntry, "bus/nim_sockets"                                                  , NULL, NULL, NULL, NULL, ""},
  	{cProcDir  , "stb"                                                              , NULL, NULL, NULL, NULL, ""},
  	{cProcDir  , "stb/audio"                                                        , NULL, NULL, NULL, NULL, ""},
-@@ -608,11 +618,35 @@ struct ProcStructure_s e2Proc[] =
+@@ -663,11 +673,35 @@ struct ProcStructure_s e2Proc[] =
  	{cProcEntry, "stb/fp/lnb_sense1"                                                , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/fp/lnb_sense2"                                                , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/fp/led0_pattern"                                              , NULL, NULL, default_write_proc, NULL, ""},
@@ -69,30 +69,8 @@ index ffb0c1d..0f02fea 100644
  
  	{cProcDir  , "stb/tsmux"                                                        , NULL, NULL, NULL, NULL, ""},
  	{cProcEntry, "stb/tsmux/input0"                                                 , NULL, NULL, NULL, NULL, ""},
-diff --git a/frontcontroller/aotom/aotom_main.c b/frontcontroller/aotom/aotom_main.c
-index 63e729e..9618279 100755
---- a/frontcontroller/aotom/aotom_main.c
-+++ b/frontcontroller/aotom/aotom_main.c
-@@ -322,7 +322,7 @@ int run_draw_thread(struct vfd_ioctl_data *draw_data)
- 	YWPANEL_VFD_ShowString(buf);
- 	} else {
- 	draw_thread_stop = 2;
--	draw_task = kthread_run(draw_thread,draw_data,"draw thread");
-+	draw_task = kthread_run(draw_thread,draw_data,"draw_thread");
- 
- 	//wait until thread has copied the argument
- 	while(draw_thread_stop == 2)
-@@ -960,7 +960,7 @@ static int __init aotom_init_module(void)
- 		led_state[i].period = 0;
- 		led_state[i].stop = 1;
- 		sema_init(&led_state[i].led_sem, 0);
--		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led thread");
-+		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led_thread");
- 	}
- 
- 
-diff --git a/frontcontroller/aotom_spark/Makefile b/frontcontroller/aotom_spark/Makefile
-index 52b07a8..af25f70 100644
+Index: b/frontcontroller/aotom_spark/Makefile
+===================================================================
 --- a/frontcontroller/aotom_spark/Makefile
 +++ b/frontcontroller/aotom_spark/Makefile
 @@ -5,6 +5,7 @@ else
@@ -103,8 +81,8 @@ index 52b07a8..af25f70 100644
      aotom-objs += aotom_main.o
  
      obj-m += aotom.o
-diff --git a/frontcontroller/aotom_spark/aotom_main.c b/frontcontroller/aotom_spark/aotom_main.c
-index 895f51c..93fe8c8 100644
+Index: b/frontcontroller/aotom_spark/aotom_main.c
+===================================================================
 --- a/frontcontroller/aotom_spark/aotom_main.c
 +++ b/frontcontroller/aotom_spark/aotom_main.c
 @@ -5,6 +5,7 @@
@@ -115,7 +93,7 @@ index 895f51c..93fe8c8 100644
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
-@@ -52,6 +53,7 @@
+@@ -53,6 +54,7 @@
  #include <linux/rtc.h>
  #include <linux/platform_device.h>
  
@@ -123,7 +101,7 @@ index 895f51c..93fe8c8 100644
  #include "aotom_main.h"
  
  static short paramDebug = 0;
-@@ -78,6 +80,7 @@ typedef struct
+@@ -79,6 +81,7 @@ typedef struct
  	int state;
  	int period;
  	int stop;
@@ -131,7 +109,7 @@ index 895f51c..93fe8c8 100644
  	struct task_struct *led_task;
  	struct semaphore led_sem;
  } tLedState;
-@@ -114,7 +117,8 @@ static struct task_struct *draw_task = 0;
+@@ -115,7 +118,8 @@ static struct task_struct *draw_task = 0
  #define DRAW_THREAD_STATUS_INIT     2
  static int draw_thread_status = DRAW_THREAD_STATUS_STOPPED;
  
@@ -139,18 +117,9 @@ index 895f51c..93fe8c8 100644
 +int aotomSetIcon(int which, int on);
 +int aotomSetLed(int which, int on);
  
- static void clear_display(void)
- {
-@@ -328,7 +332,7 @@ static int run_draw_thread(struct vfd_ioctl_data *draw_data)
- 			msleep(1);
- 	}
- 	draw_thread_status = DRAW_THREAD_STATUS_INIT;
--	draw_task = kthread_run(draw_thread, draw_data, "draw thread");
-+	draw_task = kthread_run(draw_thread, draw_data, "draw_thread");
- 	//wait until thread has copied the argument
- 	while (draw_thread_status == DRAW_THREAD_STATUS_INIT)
- 		msleep(1);
-@@ -354,7 +358,7 @@ int vfd_init_func(void)
+ int vfdlen_open(struct inode *inode, struct  file *file) {
+   return single_open(file, vfdlen_show, NULL);
+@@ -372,7 +376,7 @@ int vfd_init_func(void)
  	return 0;
  }
  
@@ -159,7 +128,7 @@ index 895f51c..93fe8c8 100644
  {
  	int  res = 0;
  	dprintk(5, "%s > %d, %d\n", __func__, which, on);
-@@ -373,8 +377,77 @@ static int aotomSetIcon(int which, int on)
+@@ -391,8 +395,77 @@ static int aotomSetIcon(int which, int o
  	return res;
  }
  
@@ -238,7 +207,7 @@ index 895f51c..93fe8c8 100644
  
  static ssize_t AOTOMdev_write(struct file *filp, const char *buff, size_t len, loff_t *off)
  {
-@@ -940,6 +1013,11 @@ static struct platform_driver aotom_rtc_driver =
+@@ -959,6 +1032,11 @@ static struct platform_driver aotom_rtc_
  	},
  };
  
@@ -250,7 +219,7 @@ index 895f51c..93fe8c8 100644
  static int __init aotom_init_module(void)
  {
  	int i;
-@@ -955,6 +1033,8 @@ static int __init aotom_init_module(void)
+@@ -974,6 +1052,8 @@ static int __init aotom_init_module(void
  		return -1;
  	if (register_chrdev(VFD_MAJOR, "VFD", &vfd_fops))
  		printk("unable to get major %d for VFD\n", VFD_MAJOR);
@@ -259,29 +228,23 @@ index 895f51c..93fe8c8 100644
  	sema_init(&write_sem, 1);
  	sema_init(&draw_thread_sem, 1);
  	for (i = 0; i < LED_COUNT; i++)
-@@ -962,8 +1042,9 @@ static int __init aotom_init_module(void)
+@@ -981,6 +1061,7 @@ static int __init aotom_init_module(void
  		led_state[i].state = LED_OFF;
  		led_state[i].period = 0;
  		led_state[i].stop = 1;
 +		led_state[i].enable = 1;
  		sema_init(&led_state[i].led_sem, 0);
--		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led thread");
-+		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led_thread");
+ 		led_state[i].led_task = kthread_run(led_thread, (void *) i, "led_thread");
  	}
- 	if (panel_version.DisplayInfo == YWPANEL_FP_DISPTYPE_VFD)
- 	{
-@@ -981,8 +1062,8 @@ static int __init aotom_init_module(void)
- 	else
+@@ -1001,6 +1082,7 @@ static int __init aotom_init_module(void
  		rtc_pdev = platform_device_register_simple(RTC_NAME, -1, NULL, 0);
  	if (IS_ERR(rtc_pdev))
--		printk(KERN_ERR "%s platform_device_register_simple failed: %ld\n",
--			   __func__, PTR_ERR(rtc_pdev));
-+		printk(KERN_ERR "%s platform_device_register_simple failed: %ld\n", __func__, PTR_ERR(rtc_pdev));
+ 		printk(KERN_ERR "%s platform_device_register_simple failed: %ld\n", __func__, PTR_ERR(rtc_pdev));
 +	create_proc_fp();
  	dprintk(5, "%s <\n", __func__);
+ 	proc_create("vfdlen", 0, NULL, &vfdlen_fops);
  	return 0;
- }
-@@ -1015,9 +1096,15 @@ static void __exit aotom_cleanup_module(void)
+@@ -1034,10 +1116,16 @@ static void __exit aotom_cleanup_module(
  		msleep(1);
  	dprintk(5, "[BTN] unloading ...\n");
  	button_dev_exit();
@@ -290,6 +253,7 @@ index 895f51c..93fe8c8 100644
 +	class_destroy(vfd_class);
  	unregister_chrdev(VFD_MAJOR, "VFD");
  	YWPANEL_VFD_Term();
+ 	remove_proc_entry("vfdlen", NULL);
  	printk("Fulan front panel module unloading\n");
 +
 +	remove_proc_fp();
@@ -297,9 +261,8 @@ index 895f51c..93fe8c8 100644
  }
  
  module_init(aotom_init_module);
-diff --git a/frontcontroller/aotom_spark/aotom_procfs.c b/frontcontroller/aotom_spark/aotom_procfs.c
-new file mode 100644
-index 0000000..340a593
+Index: b/frontcontroller/aotom_spark/aotom_procfs.c
+===================================================================
 --- /dev/null
 +++ b/frontcontroller/aotom_spark/aotom_procfs.c
 @@ -0,0 +1,702 @@

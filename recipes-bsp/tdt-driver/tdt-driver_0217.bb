@@ -2,20 +2,15 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/tdt-driver-0217:"
 
 HOMEPAGE = "http://github.com/Duckbox-Developers"
 KV = "2.6.32.61-stm24-0217"
-SRCREV = "74561bfd0d8e8d3c8cab207a2b50dd164027fabf"
+SRCREV = "e94027065dc756ea41f537d1d3d215a96d549b94"
 
 SRC_URI = " \
     git://github.com/Duckbox-Developers/driver.git;protocol=http \
     file://aotom_spark_procfs.patch;patch=1 \
-    file://fix_videomode_names.patch;patch=1 \
-    file://silence_tuner_printk.patch;patch=1 \
-    file://silence_stmfb_printk.patch;patch=1 \
-    file://silence_stmfb0104_printk.patch;patch=1 \
     file://silence_stmerger_printk.patch;patch=1 \
-    file://tdt-driver-avoid-buildtime.patch \
+    file://ddt-driver-avoid-buildtime.patch \
     file://ddt-driver-bpamem-auto-deallocate.patch \
-    file://ddt-driver-stv090x-speedup-read_snr.patch \
-    file://spark-fix-fe-caps.patch \
+    file://ddt-driver-backward-compat.patch;patch=1 \
     file://bpamem-new-toolchain-workaround.diff \
     file://aotom_udev.rules \
     file://tdt-driver.init \
@@ -24,11 +19,9 @@ SRC_URI = " \
 "
 
 PV = "2.6.32.61-stm24-0217+git${SRCPV}"
-STMFB = "0104"
-PLAYER2_INCLUDES = "player2_191"
 
 require tdt-driver.inc
-SUMMARY = "Driver modules from TDT"
-DESCRIPTION = "Driver modules from TDT"
+SUMMARY = "Driver modules from DDT"
+DESCRIPTION = "Driver modules from DDT"
 
-PR = "r5"
+PR = "r6"

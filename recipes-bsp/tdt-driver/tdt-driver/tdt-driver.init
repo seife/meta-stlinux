@@ -70,9 +70,9 @@ eval $(sed -n "/^options\s/{
 	s/^\(\S\+\)-/\1_/g;
 	s/^\(\S\+\)-/\1_/g;
 	p }" /etc/modprobe.conf 2>/dev/null)
+im e2_proc # needed by aotom
 im aotom
 im uinput
-im e2_proc
 im $STMCORE_DISP
 MEMSIZE=12m	# neutrino now needs 12m for FB scaling backbuffer
 VM=$(get_vidmode)
