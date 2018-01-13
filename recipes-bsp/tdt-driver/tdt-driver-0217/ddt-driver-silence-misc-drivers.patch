@@ -804,3 +804,16 @@ Index: b/stgfb/stmfb/linux/kernel/drivers/stm/coredisplay/hdmidev.c
  
    if(mutex_lock_interruptible(&dev->lock))
      return -ERESTARTSYS;
+Index: b/stgfb/stmfb/linux/kernel/drivers/stm/coredisplay/hdmikthread.c
+===================================================================
+--- a/stgfb/stmfb/linux/kernel/drivers/stm/coredisplay/hdmikthread.c
++++ b/stgfb/stmfb/linux/kernel/drivers/stm/coredisplay/hdmikthread.c
+@@ -537,7 +537,7 @@ static void stmhdmi_handle_wait_queue_ti
+ 
+ static void stmhdmi_restart_display(struct stm_hdmi *hdmi)
+ {
+-  printk(KERN_INFO "stmfb: Starting HDMI Output hdmi = %p\n",hdmi);
++  printk(KERN_DEBUG "stmfb: Starting HDMI Output hdmi = %p\n",hdmi);
+ 
+   /*
+    * We always re-read the EDID, as we might have received a hotplug
