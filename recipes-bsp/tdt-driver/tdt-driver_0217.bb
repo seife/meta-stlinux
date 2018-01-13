@@ -12,6 +12,7 @@ SRC_URI = " \
     file://ddt-driver-bpamem-auto-deallocate.patch \
     file://ddt-driver-backward-compat.patch;patch=1 \
     file://ddt-driver-silence-dvbdemux.patch;patch=1 \
+    file://ddt-driver-silence-misc-drivers.patch;patch=1 \
     file://bpamem-new-toolchain-workaround.diff \
     file://aotom_udev.rules \
     file://tdt-driver.init \
