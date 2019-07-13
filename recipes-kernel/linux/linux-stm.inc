@@ -256,7 +256,7 @@ elif [ "$ROOTDEV" = 0802 ]; then
 		UIMAGE=/boot/uImage-$P
 		rm -f /boot/uImage # symlink might be present from imaging
 		mv $UIMAGE		/boot/uImage
-		mv $UIMAGE$SUFFIX	/boot/uImage$SUFFIX
+		mv $UIMAGE-7162		/boot/uImage-7162
 		umount /boot
 	fi
 fi
