@@ -9,5 +9,7 @@ SRC_URI += " \
 do_install_append() {
         install -d ${D}${sysconfdir}
         install -m 0644 ${WORKDIR}/fw_env.config  ${D}${sysconfdir}
+        rm ${D}${base_sbindir}/fw_setenv
+        ln -s fw_printenv ${D}${base_sbindir}/fw_setenv
 }
 

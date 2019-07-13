@@ -11,6 +11,9 @@ STM_LINUX_VERSION ??= "2.6.32.61"
 # STM_PATCH_STR = "0211"
 # STM_LINUX_VERSION = "2.6.32.59"
 
+# dummy, to be able to build fw_printenv
+UBOOT_MACHINE = "MigoR_defconfig"
+
 PREFERRED_VERSION_stlinux24-spark ?= "${STM_LINUX_VERSION}-stm24-${STM_PATCH_STR}"
 # MACHINE=spark7162 is no longer needed nor really supported... but keep it anyway.
 PREFERRED_VERSION_stlinux24-spark7162 ?= "${STM_LINUX_VERSION}-stm24-${STM_PATCH_STR}"
