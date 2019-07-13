@@ -236,8 +236,8 @@ do_install() {
 	update-rc.d -r ${D} zz_select_sparkbox.sh start 02 S .
 
 	install -D -m 0755 ${WORKDIR}/tdt-driver.init ${D}/etc/init.d/tdt-driver
-	# drivers seem to be right at about ~ 30
-	update-rc.d -r ${D} tdt-driver start 30 S .
+	# 40 is after udev-cache -> otherwise cache is regenerated every time...
+	update-rc.d -r ${D} tdt-driver start 40 S .
 }
 
 MOD7111 = "/lib/modules/7111/${KERNEL_VERSION}/extra"

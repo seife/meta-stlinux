@@ -27,4 +27,4 @@ require tdt-driver.inc
 SUMMARY = "Driver modules from DDT"
 DESCRIPTION = "Driver modules from DDT"
 
-PR = "r6"
+PR = "r7"
