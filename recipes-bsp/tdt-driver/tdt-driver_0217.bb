@@ -13,6 +13,8 @@ SRC_URI = " \
     file://ddt-driver-backward-compat.patch;patch=1 \
     file://ddt-driver-silence-dvbdemux.patch;patch=1 \
     file://ddt-driver-silence-misc-drivers.patch;patch=1 \
+    file://ddt-driver-silence-vz7903-tuner.patch;patch=1 \
+    file://ddt-driver-avs-verbose.patch;patch=1 \
     file://0001-spark_dvbapi5-stv090x-fix-up-GM990-ix7306-tuning.patch \
     file://bpamem-new-toolchain-workaround.diff \
     file://aotom_udev.rules \
@@ -27,4 +29,4 @@ require tdt-driver.inc
 SUMMARY = "Driver modules from DDT"
 DESCRIPTION = "Driver modules from DDT"
 
-PR = "r7"
+PR = "r8"

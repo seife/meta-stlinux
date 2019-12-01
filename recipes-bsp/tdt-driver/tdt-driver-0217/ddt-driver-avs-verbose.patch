@@ -1,0 +1,34 @@
+diff --git a/avs/avs_core.c b/avs/avs_core.c
+index f4bfbaaf..233ecf19 100644
+--- a/avs/avs_core.c
++++ b/avs/avs_core.c
+@@ -150,11 +150,11 @@ static struct i2c_client *avs_client = NULL;
+ static int avs_newprobe(struct i2c_client *client, const struct i2c_device_id *id)
+ {
+ 	if (avs_client) {
+-		dprintk("[AVS]: failure, client already registered\n");
++		printk("[AVS]: failure, client already registered\n");
+ 		return -ENODEV;
+ 	}
+ 
+-	dprintk("[AVS]: chip found @ 0x%x\n", client->addr);
++	printk("[AVS]: chip found @ 0x%x\n", client->addr);
+ 
+ 	switch(devType)
+ 	{
+@@ -485,13 +485,13 @@ int __init avs_init(void)
+ 		return err;
+ 	}
+ 
+-	dprintk("[AVS]: A/V switch handling for %s\n", name);
++	printk("[AVS]: A/V switch handling for %s\n", name);
+ 
+ #if !defined(CUBEREVO_MINI_FTA) && !defined(CUBEREVO_250HD)
+ 	if ((devType != FAKE_AVS) && (devType != AVS_NONE) && (devType != VIP2_AVS)
+ 		&& (devType != VIP1_AVS) && (devType != AVS_PIO)) {
+ 		if ((res = i2c_add_driver(&avs_i2c_driver))) {
+-			dprintk("[AVS]: i2c add driver failed\n");
++			printk("[AVS]: i2c add driver failed\n");
+ 			return res;
+ 		}
+ 

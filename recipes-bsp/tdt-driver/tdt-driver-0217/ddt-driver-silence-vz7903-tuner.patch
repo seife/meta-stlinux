@@ -1,0 +1,80 @@
+diff --git a/frontends/spark_common/vz7903.c b/frontends/spark_common/vz7903.c
+index 7700545f..ea3e3c4b 100644
+--- a/frontends/spark_common/vz7903.c
++++ b/frontends/spark_common/vz7903.c
+@@ -745,7 +745,9 @@ BOOL QM1D1C0045_LocalLpfTuning(UINT32 tuner_id, PQM1D1C0045_CONFIG_STRUCT apConf
+ 		{
+ 			sd = (int)(0x400000 + 1048576 * beta / 1000); //sd = (int)(0x400000 + pow(2.,20.)*beta)
+ 		}
++#ifdef VERY_VERBOSE
+ 		printk("[tuner vz7903]beta=%d alpha=%d M=%d A=%d N=%d sd=%x\n", beta, alpha, M, A, N, sd);
++#endif
+ 		QM1D1C0045_d_reg[QM1D1C0045_REG_06] &= 0x40;
+ 		QM1D1C0045_d_reg[QM1D1C0045_REG_06] |= ((pll_ref_div << 7) | (N));
+ 		QM1D1C0045_pll_setdata_once(tuner_id, QM1D1C0045_REG_06, QM1D1C0045_d_reg[QM1D1C0045_REG_06]);
+@@ -766,7 +768,9 @@ BOOL QM1D1C0045_LocalLpfTuning(UINT32 tuner_id, PQM1D1C0045_CONFIG_STRUCT apConf
+ 		{
+ 			i_data1 = 0x0F;
+ 		}
++#ifdef VERY_VERBOSE
+ 		printk("i_data1 = %x XtalFreqKHz=%d\n", i_data1, apConfig->ui_QM1D1C0045_XtalFreqKHz);
++#endif
+ 		i_data |= i_data1;
+ 		QM1D1C0045_pll_setdata_once(tuner_id, QM1D1C0045_REG_08, i_data);
+ 		QM1D1C0045_d_reg[QM1D1C0045_REG_09] &= 0xC0;
+@@ -1039,11 +1043,13 @@ int nim_vz7903_status(UINT8 tuner_id, UINT8 *lock)
+ {
+ 	//INT32 result;
+ 	//UINT8 data;
++#ifdef VERY_VERBOSE
+ 	printk("[nim_vz7903_status tuner_id = %d]\n", tuner_id);
++#endif
+ 	//struct QPSK_TUNER_CONFIG_EXT * tuner_dev_ptr = NULL;
+ 	if (tuner_id >= vz7903_tuner_cnt || tuner_id >= YWTUNERi_MAX_TUNER_NUM)
+ 	{
+-		printk("ERR_FAILUE\n");
++		printk("%s ERR_FAILUE\n", __func__);
+ 		*lock = 0;
+ 		return ERR_FAILUE;
+ 	}
+@@ -1065,7 +1071,9 @@ int vz7903_get_frequency(struct dvb_frontend *fe, u32 *frequency)
+ {
+ 	struct vz7903_state *vz7903_state = fe->tuner_priv;
+ 	*frequency = vz7903_state->frequency;
++#ifdef VERY_VERBOSE
+ 	printk("%s: Frequency=%d\n", __func__, vz7903_state->frequency);
++#endif
+ 	return 0;
+ }
+ 
+@@ -1080,7 +1088,9 @@ int vz7903_set_frequency(struct dvb_frontend *fe, u32 frequency)
+ 	{
+ 		printk("nim_vz7903_control error!\n");
+ 	}
++#ifdef VERY_VERBOSE
+ 	printk("%s: Frequency=%d symbolrate=%d\n", __func__, frequency / 1000, state->srate / 1000);
++#endif
+ 	return 0;
+ }
+ 
+@@ -1094,7 +1104,9 @@ int vz7903_get_bandwidth(struct dvb_frontend *fe, u32 *bandwidth)
+ {
+ 	struct vz7903_state *state = fe->tuner_priv;
+ 	*bandwidth = state->bandwidth;
++#ifdef VERY_VERBOSE
+ 	printk("%s: Bandwidth=%d\n", __func__, state->bandwidth);
++#endif
+ 	return 0;
+ }
+ int vz7903_get_status(struct dvb_frontend *fe, u32 *status)
+@@ -1110,8 +1122,10 @@ static int vz7903_set_params(struct dvb_frontend *fe,
+ 							 struct dvb_frontend_parameters *p)
+ {
+ 	struct vz7903_state *state = fe->tuner_priv;
++#ifdef VERY_VERBOSE
+ 	printk("p->frequency = %d, p->u.qpsk.symbol_rate = %d\n",
+ 		   p->frequency, p->u.qpsk.symbol_rate);
++#endif
+ 	state->frequency = p->frequency;
+ 	return nim_vz7903_control(state->index, p->frequency,
+ 							  p->u.qpsk.symbol_rate);
